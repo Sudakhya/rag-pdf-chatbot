@@ -1,30 +1,35 @@
-from langchain_openai import ChatOpenAI
+import os
+from dotenv import load_dotenv
+
+from langchain_groq import ChatGroq
+
+load_dotenv()
+
+llm = ChatGroq(
+    model="llama-3.3-70b-versatile",
+    groq_api_key = os.getenv("GROQ_API_KEY"),
+    temperature=0
+)
 
 def ask_question(db, question):
 
-    docs = db.similarity_search(
-        question,
-        k=3
-    )
+    docs = db.similarity_search(question, k=4)
 
-    context = "\n".join(
+    context = "\n\n".join(
         [doc.page_content for doc in docs]
     )
 
-    llm = ChatOpenAI(
-        model="gpt-4o-mini",
-        temperature=0
-    )
-
     prompt = f"""
-    Use only the context.
+You are a helpful assistant.
 
-    Context:
-    {context}
+Answer ONLY using the context below.
 
-    Question:
-    {question}
-    """
+Context:
+{context}
+
+Question:
+{question}
+"""
 
     response = llm.invoke(prompt)
 

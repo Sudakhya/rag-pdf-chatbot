@@ -1,14 +1,24 @@
-import streamlit as st
+import os
 import tempfile
+
+import streamlit as st
+from dotenv import load_dotenv
 
 from src.pdf_loader import load_pdf
 from src.vector_store import create_vector_store
 from src.rag_chain import ask_question
 
-st.title("RAG PDF Chatbot")
+load_dotenv()
+
+st.set_page_config(
+    page_title="RAG PDF Chatbot",
+    page_icon="📄"
+)
+
+st.title("📄 RAG PDF Chatbot")
 
 uploaded_file = st.file_uploader(
-    "Upload PDF",
+    "Upload a PDF",
     type="pdf"
 )
 
@@ -20,12 +30,15 @@ if uploaded_file:
     ) as tmp:
 
         tmp.write(uploaded_file.read())
-
         pdf_path = tmp.name
 
-    chunks = load_pdf(pdf_path)
+    with st.spinner("Creating vector database..."):
 
-    db = create_vector_store(chunks)
+        chunks = load_pdf(pdf_path)
+
+        db = create_vector_store(chunks)
+
+    st.success("PDF Indexed Successfully!")
 
     question = st.text_input(
         "Ask a question"
@@ -33,9 +46,13 @@ if uploaded_file:
 
     if question:
 
-        answer = ask_question(
-            db,
-            question
-        )
+        with st.spinner("Thinking..."):
+
+            answer = ask_question(
+                db,
+                question
+            )
+
+        st.markdown("### Answer")
 
         st.write(answer)
