@@ -7,7 +7,18 @@ from dotenv import load_dotenv
 from src.pdf_loader import load_pdf
 from src.vector_store import create_vector_store
 from src.rag_chain import ask_question
+import streamlit as st
 
+st.title("Secrets Test")
+
+st.write("Secrets available:")
+st.write(list(st.secrets.keys()))
+
+if "GROQ_API_KEY" in st.secrets:
+    st.success("Groq key found!")
+else:
+    st.error("Groq key NOT found!")
+    
 load_dotenv()
 
 st.set_page_config(
