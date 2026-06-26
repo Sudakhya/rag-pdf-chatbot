@@ -2,6 +2,21 @@
 
 A GenAI-powered PDF Question Answering application built using Streamlit.
 
+# Features
+
+✅ PDF Upload
+
+✅ Semantic Search
+
+✅ RAG Architecture
+
+✅ Source Attribution
+
+✅ GPT-4o-mini
+
+✅ FAISS Vector Database
+
+
 ## Features
 
 - Upload PDF documents
